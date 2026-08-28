@@ -27,9 +27,12 @@
     "version:create": "changeset"
   },
   "author": "Defra Grants Platform Experience Team",
-  "main": "./dist/index.js",
+  "main": "./src/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./src/index.js",
+    "./publish": "./src/publish.js",
+    "./validate": "./src/validate.js",
+    "./schema": "./src/schema.js"
   },
   "license": "OGL-UK-3.0",
   "bugs": {
@@ -60,6 +63,11 @@
   },
   "peerDependencies": {
     "@aws-sdk/client-sns": ">=3"
+  },
+  "peerDependenciesMeta": {
+    "@aws-sdk/client-sns": {
+      "optional": true
+    }
   },
   "release-it": {
     "npm": {
