@@ -1,0 +1,94 @@
+{
+  "name": "@defra/grants-reporting-publisher",
+  "version": "0.0.0",
+  "description": "NPM module for providing utils for publishing grants config",
+  "engines": {
+    "node": ">=24",
+    "npm": ">=11.10.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DEFRA/grants-reporting-publisher.git"
+  },
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "github:release": "npm run publish:changed && npx cdp-github-release @defra/grants-reporting-publisher",
+    "lint": "eslint --cache --cache-strategy content \"**/*.{cjs,js}\"",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier --check \"**/*.{cjs,js,json}\"",
+    "prettier:fix": "prettier --write \"**/*.{cjs,js,json}\"",
+    "publish:changed": "changeset publish",
+    "test": "TZ=UTC vitest run --coverage",
+    "version:changed": "changeset version",
+    "version:create": "changeset"
+  },
+  "author": "Defra Grants Platform Experience Team",
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "license": "OGL-UK-3.0",
+  "bugs": {
+    "url": "https://github.com/DEFRA/grants-reporting-publisher/issues"
+  },
+  "homepage": "https://github.com/DEFRA/grants-reporting-publisher#readme",
+  "dependencies": {
+    "joi": "18.2.5"
+  },
+  "devDependencies": {
+    "@babel/core": "8.0.1",
+    "@babel/preset-env": "8.0.2",
+    "@changesets/changelog-github": "1.0.0",
+    "@changesets/cli": "3.0.1",
+    "@vitest/coverage-v8": "4.1.10",
+    "eslint": "10.7.0",
+    "eslint-config-prettier": "10.1.1",
+    "husky": "9.1.7",
+    "lint-staged": "17.3.0",
+    "neostandard": "0.13.0",
+    "prettier": "3.9.6",
+    "vitest": "4.1.10",
+    "vitest-fetch-mock": "0.4.5"
+  },
+  "overrides": {
+    "brace-expansion": "5.0.9",
+    "eslint": "10.7.0"
+  },
+  "peerDependencies": {
+    "@aws-sdk/client-sns": ">=3"
+  },
+  "release-it": {
+    "npm": {
+      "publish": false
+    },
+    "github": {
+      "release": true,
+      "releaseName": "Release ${version}",
+      "releaseNotes": "echo ''"
+    },
+    "git": {
+      "commitMessage": "Tagged @defra/grants-reporting-publisher ${version}",
+      "tagName": "@defra/grants-reporting-publisher-${version}",
+      "requireCleanWorkingDir": false,
+      "commitArgs": [
+        "--no-verify"
+      ]
+    }
+  },
+  "bin": {
+    "cdp-github-release": "ci/release-it.sh"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}
