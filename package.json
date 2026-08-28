@@ -1,6 +1,6 @@
 {
   "name": "@defra/grants-reporting-publisher",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "NPM module for publishing grants reporting events",
   "engines": {
     "node": ">=24",
