@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 0.1.1
+
+### Patch Changes
+
+- f8be355: Update readme with examples
+
 ## 0.1.0
 
 ### Minor Changes
