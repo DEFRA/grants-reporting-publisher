@@ -32,7 +32,8 @@
     ".": "./src/index.js",
     "./publish": "./src/publish.js",
     "./validate": "./src/validate.js",
-    "./schema": "./src/schema.js"
+    "./schema": "./src/schema.js",
+    "./constants": "./src/constants.js"
   },
   "license": "OGL-UK-3.0",
   "bugs": {
