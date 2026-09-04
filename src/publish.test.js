@@ -1,4 +1,5 @@
 import { publishReportingEvent } from "./publish.js";
+import { AGREEMENT_STATUS_CHANGED } from "./constants.js";
 
 const mockSend = vi.hoisted(() =>
   vi.fn().mockResolvedValue({ MessageId: "msg-001" }),
@@ -22,8 +23,12 @@ const validEvent = {
   datetime: "2025-12-01T12:51:41.381Z",
   version: "1.0.0",
   application: "FCP001",
+  service: "grants",
   eventData: {
-    status: "created",
+    eventType: AGREEMENT_STATUS_CHANGED,
+    agreementId: "WMP123456789",
+    agreementStatus: "created",
+    statusDate: "2025-12-01T12:51:41.381Z",
   },
 };
 
