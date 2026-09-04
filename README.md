@@ -4,6 +4,8 @@ NPM module for providing validation and publishing capability for grants reporti
 
 ## Usage
 
+Refer to the [Usage Examples](EXAMPLES.md) for detailed examples of how to publish reporting events.
+
 ### Installation
 
 ```
