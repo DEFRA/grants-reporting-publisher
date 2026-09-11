@@ -1,5 +1,5 @@
 import { publishReportingEvent } from "./publish.js";
-import { AGREEMENT_STATUS_CHANGED } from "./constants.js";
+import { AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED } from "./constants.js";
 
 const mockSend = vi.hoisted(() =>
   vi.fn().mockResolvedValue({ MessageId: "msg-001" }),
@@ -160,6 +160,38 @@ describe("publishAuditEvent", () => {
 
     test("calls send on provided snsClient", async () => {
       await publishReportingEvent(validEvent, baseConfig);
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    test("publishes AGREEMENT_CREATED event with minimal options", async () => {
+      const agreementCreatedEvent = {
+        correlationId: "abc-123",
+        datetime: "2025-12-01T12:51:41.381Z",
+        version: "1.0.0",
+        application: "FCP001",
+        service: "grants",
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              optionCode: "WMP1",
+              optionQuantity: 15.75,
+              optionValue: 1575.0,
+            },
+          ],
+        },
+      };
+
+      const result = await publishReportingEvent(
+        agreementCreatedEvent,
+        baseConfig,
+      );
+      expect(result).toEqual({ messageId: "msg-001" });
       expect(mockSend).toHaveBeenCalledTimes(1);
     });
   });

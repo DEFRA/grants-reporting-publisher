@@ -199,7 +199,51 @@ describe("validateReportingEvent", () => {
             {
               parcelReference: "SD8545-9935",
               optionCode: "WMP1",
+              optionQuantity: 15.75,
+              optionValue: 1575.0,
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts Agreement created event with option containing optionStartDate only", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              optionCode: "WMP1",
               optionStartDate: "2026-09-01",
+              optionQuantity: 15.75,
+              optionValue: 1575.0,
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts Agreement created event with option containing optionEndDate only", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              optionCode: "WMP1",
               optionEndDate: "2029-08-31",
               optionQuantity: 15.75,
               optionValue: 1575.0,
@@ -208,6 +252,58 @@ describe("validateReportingEvent", () => {
         },
       });
       expect(result.valid).toBe(true);
+    });
+
+    test("rejects Agreement created event if optionStartDate is not a valid date", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              optionCode: "WMP1",
+              optionStartDate: "invalid-date",
+              optionQuantity: 15.75,
+              optionValue: 1575.0,
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.options[0].optionStartDate" must be in ISO 8601 date format',
+      );
+    });
+
+    test("rejects Agreement created event if optionEndDate is not a valid date", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              optionCode: "WMP1",
+              optionEndDate: "invalid-date",
+              optionQuantity: 15.75,
+              optionValue: 1575.0,
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.options[0].optionEndDate" must be in ISO 8601 date format',
+      );
     });
 
     test("rejects Agreement created event if required fields are missing", () => {
