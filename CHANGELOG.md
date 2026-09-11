@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 0.1.2
+
+### Patch Changes
+
+- 62e9659: Make some option fields optional
+
 ## 0.1.1
 
 ### Patch Changes
