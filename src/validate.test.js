@@ -394,6 +394,49 @@ describe("validateReportingEvent", () => {
       expect(result.valid).toBe(true);
     });
 
+    test("accepts a valid Agreement status changed event with options", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_STATUS_CHANGED,
+          agreementId: "WMP123456789",
+          agreementStatus: "ACCEPTED",
+          statusDate: "2026-09-02T10:00:00Z",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              optionCode: "WMP1",
+              optionQuantity: 15.75,
+              optionValue: 1575.0,
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("rejects Agreement status changed event if options contain invalid data", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_STATUS_CHANGED,
+          agreementId: "WMP123456789",
+          agreementStatus: "ACCEPTED",
+          statusDate: "2026-09-02T10:00:00Z",
+          options: [
+            {
+              parcelReference: "SD8545-9935",
+              // missing mandatory option fields like optionCode
+            },
+          ],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.options[0].optionCode" is required',
+      );
+    });
+
     test("rejects Agreement status changed event if required fields are missing", () => {
       const result = validateReportingEvent({
         ...validBase,
