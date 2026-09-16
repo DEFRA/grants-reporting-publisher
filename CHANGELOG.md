@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 0.2.0
+
+### Minor Changes
+
+- 4a25189: Allow options to be sent with a status change messgae
+
 ## 0.1.2
 
 ### Patch Changes
