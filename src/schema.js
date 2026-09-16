@@ -8,6 +8,19 @@ const accountId = Joi.alternatives()
   .try(Joi.string().max(MAX_50), Joi.number())
   .custom(String);
 
+const optionsSchema = Joi.array().items(
+  Joi.object({
+    parcelReference: Joi.string().allow("").required(),
+    parcelSizeUnderAgreement: Joi.number().optional(),
+    optionCode: Joi.string().required(),
+    optionYear: Joi.number().integer().optional(),
+    optionStartDate: Joi.date().iso().optional(),
+    optionEndDate: Joi.date().iso().optional(),
+    optionQuantity: Joi.number().required(),
+    optionValue: Joi.number().required(),
+  }),
+);
+
 export const eventSchema = Joi.object({
   correlationId: Joi.string().max(MAX_50).required(),
   datetime: Joi.date().iso().required(),
@@ -28,20 +41,7 @@ export const eventSchema = Joi.object({
         agreementEndDate: Joi.date().iso().optional(),
         agreementValue: Joi.number().optional(),
         sbi: accountId.required(),
-        options: Joi.array()
-          .items(
-            Joi.object({
-              parcelReference: Joi.string().allow("").required(),
-              parcelSizeUnderAgreement: Joi.number().optional(),
-              optionCode: Joi.string().required(),
-              optionYear: Joi.number().integer().optional(),
-              optionStartDate: Joi.date().iso().optional(),
-              optionEndDate: Joi.date().iso().optional(),
-              optionQuantity: Joi.number().required(),
-              optionValue: Joi.number().required(),
-            }),
-          )
-          .required(),
+        options: optionsSchema.required(),
       }),
     })
     .when(Joi.object({ eventType: AGREEMENT_STATUS_CHANGED }).unknown(), {
@@ -53,6 +53,7 @@ export const eventSchema = Joi.object({
         agreementEndDate: Joi.date().iso().optional(),
         agreementValue: Joi.number().optional(),
         userId: Joi.string().optional(),
+        options: optionsSchema.optional(),
       }),
     })
     .unknown()
