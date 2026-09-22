@@ -44,6 +44,7 @@ const agreementCreatedEvent = {
     agreementEndDate: "2031-12-31",
     agreementValue: 50000.0,
     sbi: "200000001",
+    parcels: ["SD8545-9935"],
     options: [
       {
         parcelReference: "SD8545-9935",

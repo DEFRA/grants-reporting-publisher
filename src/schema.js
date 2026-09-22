@@ -8,6 +8,8 @@ const accountId = Joi.alternatives()
   .try(Joi.string().max(MAX_50), Joi.number())
   .custom(String);
 
+const parcelsSchema = Joi.array().items(Joi.string());
+
 const optionsSchema = Joi.array().items(
   Joi.object({
     parcelReference: Joi.string().allow("").required(),
@@ -41,6 +43,7 @@ export const eventSchema = Joi.object({
         agreementEndDate: Joi.date().iso().optional(),
         agreementValue: Joi.number().optional(),
         sbi: accountId.required(),
+        parcels: parcelsSchema.required(),
         options: optionsSchema.required(),
       }),
     })
@@ -53,6 +56,7 @@ export const eventSchema = Joi.object({
         agreementEndDate: Joi.date().iso().optional(),
         agreementValue: Joi.number().optional(),
         userId: Joi.string().optional(),
+        parcels: parcelsSchema.optional(),
         options: optionsSchema.optional(),
       }),
     })
