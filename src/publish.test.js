@@ -176,6 +176,7 @@ describe("publishAuditEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",

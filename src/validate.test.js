@@ -139,6 +139,7 @@ describe("validateReportingEvent", () => {
           agreementEndDate: "2029-08-31",
           agreementValue: 1575.0,
           sbi: "200000001",
+          parcels: [],
           options: [],
         },
       });
@@ -154,6 +155,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",
@@ -180,6 +182,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: [],
           options: [],
         },
       });
@@ -195,6 +198,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",
@@ -217,6 +221,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",
@@ -240,6 +245,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",
@@ -263,6 +269,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",
@@ -289,6 +296,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               parcelReference: "SD8545-9935",
@@ -320,7 +328,60 @@ describe("validateReportingEvent", () => {
         '"eventData.agreementStatus" is required',
       );
       expect(result.errors).toContain('"eventData.sbi" is required');
+      expect(result.errors).toContain('"eventData.parcels" is required');
       expect(result.errors).toContain('"eventData.options" is required');
+    });
+
+    test("rejects Agreement created event if parcels is missing", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          options: [],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('"eventData.parcels" is required');
+    });
+
+    test("rejects Agreement created event if parcels is not an array", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          parcels: "SD8545-9935",
+          options: [],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('"eventData.parcels" must be an array');
+    });
+
+    test("rejects Agreement created event if parcels contains non-string items", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_CREATED,
+          agreementId: "WMP123456789",
+          agreementType: "WOODLAND",
+          agreementStatus: "ACCEPTED",
+          sbi: "200000001",
+          parcels: [123],
+          options: [],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.parcels[0]" must be a string',
+      );
     });
 
     test("rejects Agreement created event if options contain invalid data", () => {
@@ -332,6 +393,7 @@ describe("validateReportingEvent", () => {
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
           sbi: "200000001",
+          parcels: ["SD8545-9935"],
           options: [
             {
               agreementId: "WMP123456789",
@@ -413,6 +475,66 @@ describe("validateReportingEvent", () => {
         },
       });
       expect(result.valid).toBe(true);
+    });
+
+    test("accepts a valid Agreement status changed event with empty parcels array", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_STATUS_CHANGED,
+          agreementId: "WMP123456789",
+          agreementStatus: "ACCEPTED",
+          statusDate: "2026-09-02T10:00:00Z",
+          parcels: [],
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts a valid Agreement status changed event with parcels", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_STATUS_CHANGED,
+          agreementId: "WMP123456789",
+          agreementStatus: "ACCEPTED",
+          statusDate: "2026-09-02T10:00:00Z",
+          parcels: ["SD8545-9935", "SD8545-9936"],
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("rejects Agreement status changed event if parcels is not an array", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_STATUS_CHANGED,
+          agreementId: "WMP123456789",
+          agreementStatus: "ACCEPTED",
+          statusDate: "2026-09-02T10:00:00Z",
+          parcels: "SD8545-9935",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('"eventData.parcels" must be an array');
+    });
+
+    test("rejects Agreement status changed event if parcels contains non-string items", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: AGREEMENT_STATUS_CHANGED,
+          agreementId: "WMP123456789",
+          agreementStatus: "ACCEPTED",
+          statusDate: "2026-09-02T10:00:00Z",
+          parcels: [123],
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.parcels[0]" must be a string',
+      );
     });
 
     test("rejects Agreement status changed event if options contain invalid data", () => {
