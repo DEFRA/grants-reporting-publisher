@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 0.3.0
+
+### Minor Changes
+
+- 37b65ca: Add new parcels element (mandatory on agreement created)
+
 ## 0.2.0
 
 ### Minor Changes
