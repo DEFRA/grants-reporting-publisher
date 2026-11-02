@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 0.3.1
+
+### Patch Changes
+
+- 3a7e0a8: Build change only
+
 ## 0.3.0
 
 ### Minor Changes
