@@ -1,5 +1,9 @@
 import { publishReportingEvent } from "./publish.js";
-import { AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED } from "./constants.js";
+import {
+  AGREEMENT_CREATED,
+  AGREEMENT_STATUS_CHANGED,
+  CLAIM_SUBMITTED,
+} from "./constants.js";
 
 const mockSend = vi.hoisted(() =>
   vi.fn().mockResolvedValue({ MessageId: "msg-001" }),
@@ -190,6 +194,34 @@ describe("publishAuditEvent", () => {
 
       const result = await publishReportingEvent(
         agreementCreatedEvent,
+        baseConfig,
+      );
+      expect(result).toEqual({ messageId: "msg-001" });
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    test("publishes CLAIM_SUBMITTED event", async () => {
+      const claimSubmittedEvent = {
+        correlationId: "abc-123",
+        datetime: "2025-12-01T12:51:41.381Z",
+        version: "1.0.0",
+        application: "FCP001",
+        service: "grants",
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: "200000001",
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimCode: "ANNUAL",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "2025-12-01T12:51:41.381Z",
+          claimValue: 12500.5,
+          claimPaymentRef: "PAY-12345",
+        },
+      };
+
+      const result = await publishReportingEvent(
+        claimSubmittedEvent,
         baseConfig,
       );
       expect(result).toEqual({ messageId: "msg-001" });

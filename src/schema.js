@@ -1,5 +1,9 @@
 import Joi from "joi";
-import { AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED } from "./constants.js";
+import {
+  AGREEMENT_CREATED,
+  AGREEMENT_STATUS_CHANGED,
+  CLAIM_SUBMITTED,
+} from "./constants.js";
 
 const MAX_30 = 30;
 const MAX_50 = 50;
@@ -31,7 +35,7 @@ export const eventSchema = Joi.object({
   service: Joi.string().max(MAX_30).required(),
   eventData: Joi.object({
     eventType: Joi.string()
-      .valid(AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED)
+      .valid(AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED)
       .required(),
   })
     .when(Joi.object({ eventType: AGREEMENT_CREATED }).unknown(), {
@@ -58,6 +62,18 @@ export const eventSchema = Joi.object({
         userId: Joi.string().optional(),
         parcels: parcelsSchema.optional(),
         options: optionsSchema.optional(),
+      }),
+    })
+    .when(Joi.object({ eventType: CLAIM_SUBMITTED }).unknown(), {
+      then: Joi.object({
+        sbi: accountId.required(),
+        agreementId: Joi.string().required(),
+        claimId: Joi.string().required(),
+        claimCode: Joi.string().optional(),
+        claimStatus: Joi.string().required(),
+        claimReceiptDate: Joi.date().iso().required(),
+        claimValue: Joi.number().required(),
+        claimPaymentRef: Joi.string().allow("").optional(),
       }),
     })
     .unknown()
