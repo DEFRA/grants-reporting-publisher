@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 1.0.0
+
+### Major Changes
+
+- 8deebeb: First major version. Now includes claim submitted
+
 ## 0.3.1
 
 ### Patch Changes
