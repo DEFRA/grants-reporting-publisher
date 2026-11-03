@@ -1,5 +1,9 @@
 import { validateReportingEvent } from "./validate.js";
-import { AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED } from "./constants.js";
+import {
+  AGREEMENT_CREATED,
+  AGREEMENT_STATUS_CHANGED,
+  CLAIM_SUBMITTED,
+} from "./constants.js";
 
 const validBase = {
   correlationId: "abc-123",
@@ -115,7 +119,7 @@ describe("validateReportingEvent", () => {
       });
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
-        '"eventData.eventType" must be one of [AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED]',
+        '"eventData.eventType" must be one of [AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED]',
       );
     });
 
@@ -572,6 +576,132 @@ describe("validateReportingEvent", () => {
         '"eventData.agreementStatus" is required',
       );
       expect(result.errors).toContain('"eventData.statusDate" is required');
+    });
+  });
+
+  describe("Claim submitted events", () => {
+    test("accepts a valid Claim submitted event with all fields", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: "200000001",
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimCode: "ANNUAL",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "2026-09-02T10:00:00Z",
+          claimValue: 12500.5,
+          claimPaymentRef: "PAY-12345",
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts a valid Claim submitted event with only mandatory fields", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: "200000001",
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "2026-09-02T10:00:00Z",
+          claimValue: 12500.5,
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts a valid Claim submitted event with numeric sbi", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: 200000001,
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "2026-09-02T10:00:00Z",
+          claimValue: 12500.5,
+        },
+      });
+      expect(result.valid).toBe(true);
+      expect(result.value.eventData.sbi).toBe("200000001");
+    });
+
+    test("accepts a valid Claim submitted event with empty string claimPaymentRef", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: "200000001",
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "2026-09-02T10:00:00Z",
+          claimValue: 12500.5,
+          claimPaymentRef: "",
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("rejects Claim submitted event if required fields are missing", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          agreementId: "WMP123456789",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('"eventData.sbi" is required');
+      expect(result.errors).toContain('"eventData.claimId" is required');
+      expect(result.errors).toContain('"eventData.claimStatus" is required');
+      expect(result.errors).toContain(
+        '"eventData.claimReceiptDate" is required',
+      );
+      expect(result.errors).toContain('"eventData.claimValue" is required');
+    });
+
+    test("rejects Claim submitted event if claimReceiptDate is not a valid date", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: "200000001",
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "invalid-date",
+          claimValue: 12500.5,
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.claimReceiptDate" must be in ISO 8601 date format',
+      );
+    });
+
+    test("rejects Claim submitted event if claimValue is not a number", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: CLAIM_SUBMITTED,
+          sbi: "200000001",
+          agreementId: "WMP123456789",
+          claimId: "CLM123456",
+          claimStatus: "SUBMITTED",
+          claimReceiptDate: "2026-09-02T10:00:00Z",
+          claimValue: "invalid-value",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.claimValue" must be a number',
+      );
     });
   });
 });

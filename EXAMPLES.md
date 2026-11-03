@@ -12,6 +12,7 @@ import {
   publishReportingEvent,
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
+  CLAIM_SUBMITTED,
 } from "@defra/grants-reporting-publisher";
 
 const snsClient = new SNSClient({ region: "eu-west-2" });
@@ -91,6 +92,36 @@ const statusChangedEvent = {
 
 try {
   const { messageId } = await publishReportingEvent(statusChangedEvent, config);
+  console.log(`Event published with Message ID: ${messageId}`);
+} catch (error) {
+  console.error("Failed to publish event:", error.message);
+}
+```
+
+### Claim Submitted (`CLAIM_SUBMITTED`)
+
+Use this event type when a claim is submitted.
+
+```javascript
+const claimSubmittedEvent = {
+  eventData: {
+    eventType: CLAIM_SUBMITTED,
+    sbi: "200000001",
+    agreementId: "AG-123456",
+    claimId: "CLM-987654",
+    claimCode: "ANNUAL_CLAIM", // optional
+    claimStatus: "SUBMITTED",
+    claimReceiptDate: new Date().toISOString(),
+    claimValue: 12500.5,
+    claimPaymentRef: "PAY-12345", // optional, can be empty string
+  },
+};
+
+try {
+  const { messageId } = await publishReportingEvent(
+    claimSubmittedEvent,
+    config,
+  );
   console.log(`Event published with Message ID: ${messageId}`);
 } catch (error) {
   console.error("Failed to publish event:", error.message);
