@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 1.0.1
+
+### Patch Changes
+
+- 57a3f9f: Updated to latest node version
+
 ## 1.0.0
 
 ### Major Changes
