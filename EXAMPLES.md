@@ -13,6 +13,7 @@ import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
   CLAIM_SUBMITTED,
+  APPLICATION_CREATED,
 } from "@defra/grants-reporting-publisher";
 
 const snsClient = new SNSClient({ region: "eu-west-2" });
@@ -44,7 +45,7 @@ const agreementCreatedEvent = {
     agreementStartDate: "2026-01-01",
     agreementEndDate: "2031-12-31",
     agreementValue: 50000.0,
-    sbi: "200000001",
+    sbi: "800000001",
     parcels: ["SD8545-9935"],
     options: [
       {
@@ -106,7 +107,7 @@ Use this event type when a claim is submitted.
 const claimSubmittedEvent = {
   eventData: {
     eventType: CLAIM_SUBMITTED,
-    sbi: "200000001",
+    sbi: "800000001",
     agreementId: "AG-123456",
     claimId: "CLM-987654",
     claimCode: "ANNUAL_CLAIM", // optional
@@ -120,6 +121,55 @@ const claimSubmittedEvent = {
 try {
   const { messageId } = await publishReportingEvent(
     claimSubmittedEvent,
+    config,
+  );
+  console.log(`Event published with Message ID: ${messageId}`);
+} catch (error) {
+  console.error("Failed to publish event:", error.message);
+}
+```
+
+### Application Created (`APPLICATION_CREATED`)
+
+Use this event type when a new application is created.
+
+```javascript
+const applicationCreatedEvent = {
+  eventData: {
+    eventType: APPLICATION_CREATED,
+    sbi: "800000001",
+    crn: "123456789",
+    applicationId: "APP-123456",
+    applicationType: "water-management",
+    applicationReceiptDate: new Date().toISOString(),
+    applicantName: "Jane Doe", // optional
+    applicationPayload: {
+      businessDetailsUpToDate: true,
+      applicant: {
+        business: {
+          name: "Jane Doe Farms Ltd",
+        },
+        customer: {
+          name: "Jane Doe",
+        },
+      },
+      yourLegalStatus: "Private limited company",
+      companyNumber: "12351975",
+      organisationType: "Landowner farmer or grower",
+      sectorsIrrigated: ["Arable crops"],
+      whereWaterWillComeFrom: [
+        "A surface water source (for example a river or stream)",
+      ],
+      itemsPlanningToInstall: ["Reservoir"],
+      totalEstimatedCost: 150000,
+      estimatedMaxGrant: 75000,
+    },
+  },
+};
+
+try {
+  const { messageId } = await publishReportingEvent(
+    applicationCreatedEvent,
     config,
   );
   console.log(`Event published with Message ID: ${messageId}`);

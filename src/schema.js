@@ -2,6 +2,7 @@ import Joi from "joi";
 import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
+  APPLICATION_CREATED,
   CLAIM_SUBMITTED,
 } from "./constants.js";
 
@@ -27,6 +28,51 @@ const optionsSchema = Joi.array().items(
   }),
 );
 
+const agreementCreatedEventSchema = Joi.object({
+  agreementId: Joi.string().required(),
+  agreementType: Joi.string().required(),
+  agreementStatus: Joi.string().required(),
+  agreementStartDate: Joi.date().iso().optional(),
+  agreementEndDate: Joi.date().iso().optional(),
+  agreementValue: Joi.number().optional(),
+  sbi: accountId.required(),
+  parcels: parcelsSchema.required(),
+  options: optionsSchema.required(),
+});
+
+const agreementStatusChangedEventSchema = Joi.object({
+  agreementId: Joi.string().required(),
+  agreementStatus: Joi.string().required(),
+  statusDate: Joi.date().iso().required(),
+  agreementStartDate: Joi.date().iso().optional(),
+  agreementEndDate: Joi.date().iso().optional(),
+  agreementValue: Joi.number().optional(),
+  userId: Joi.string().optional(),
+  parcels: parcelsSchema.optional(),
+  options: optionsSchema.optional(),
+});
+
+const claimSubmittedEventSchema = Joi.object({
+  sbi: accountId.required(),
+  agreementId: Joi.string().required(),
+  claimId: Joi.string().required(),
+  claimCode: Joi.string().optional(),
+  claimStatus: Joi.string().required(),
+  claimReceiptDate: Joi.date().iso().required(),
+  claimValue: Joi.number().required(),
+  claimPaymentRef: Joi.string().allow("").optional(),
+});
+
+const applicationCreatedEventSchema = Joi.object({
+  sbi: accountId.required(),
+  crn: accountId.required(),
+  applicationId: Joi.string().required(),
+  applicationType: Joi.string().required(),
+  applicationReceiptDate: Joi.date().iso().required(),
+  applicantName: Joi.string().optional(),
+  applicationPayload: Joi.object().required(),
+});
+
 export const eventSchema = Joi.object({
   correlationId: Joi.string().max(MAX_50).required(),
   datetime: Joi.date().iso().required(),
@@ -35,46 +81,25 @@ export const eventSchema = Joi.object({
   service: Joi.string().max(MAX_30).required(),
   eventData: Joi.object({
     eventType: Joi.string()
-      .valid(AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED)
+      .valid(
+        AGREEMENT_CREATED,
+        AGREEMENT_STATUS_CHANGED,
+        CLAIM_SUBMITTED,
+        APPLICATION_CREATED,
+      )
       .required(),
   })
     .when(Joi.object({ eventType: AGREEMENT_CREATED }).unknown(), {
-      then: Joi.object({
-        agreementId: Joi.string().required(),
-        agreementType: Joi.string().required(),
-        agreementStatus: Joi.string().required(),
-        agreementStartDate: Joi.date().iso().optional(),
-        agreementEndDate: Joi.date().iso().optional(),
-        agreementValue: Joi.number().optional(),
-        sbi: accountId.required(),
-        parcels: parcelsSchema.required(),
-        options: optionsSchema.required(),
-      }),
+      then: agreementCreatedEventSchema,
     })
     .when(Joi.object({ eventType: AGREEMENT_STATUS_CHANGED }).unknown(), {
-      then: Joi.object({
-        agreementId: Joi.string().required(),
-        agreementStatus: Joi.string().required(),
-        statusDate: Joi.date().iso().required(),
-        agreementStartDate: Joi.date().iso().optional(),
-        agreementEndDate: Joi.date().iso().optional(),
-        agreementValue: Joi.number().optional(),
-        userId: Joi.string().optional(),
-        parcels: parcelsSchema.optional(),
-        options: optionsSchema.optional(),
-      }),
+      then: agreementStatusChangedEventSchema,
     })
     .when(Joi.object({ eventType: CLAIM_SUBMITTED }).unknown(), {
-      then: Joi.object({
-        sbi: accountId.required(),
-        agreementId: Joi.string().required(),
-        claimId: Joi.string().required(),
-        claimCode: Joi.string().optional(),
-        claimStatus: Joi.string().required(),
-        claimReceiptDate: Joi.date().iso().required(),
-        claimValue: Joi.number().required(),
-        claimPaymentRef: Joi.string().allow("").optional(),
-      }),
+      then: claimSubmittedEventSchema,
+    })
+    .when(Joi.object({ eventType: APPLICATION_CREATED }).unknown(), {
+      then: applicationCreatedEventSchema,
     })
     .unknown()
     .required(),

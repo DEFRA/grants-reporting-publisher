@@ -2,6 +2,7 @@ import { validateReportingEvent } from "./validate.js";
 import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
+  APPLICATION_CREATED,
   CLAIM_SUBMITTED,
 } from "./constants.js";
 
@@ -119,7 +120,7 @@ describe("validateReportingEvent", () => {
       });
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
-        '"eventData.eventType" must be one of [AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED]',
+        '"eventData.eventType" must be one of [AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED, APPLICATION_CREATED]',
       );
     });
 
@@ -142,7 +143,7 @@ describe("validateReportingEvent", () => {
           agreementStartDate: "2026-09-01",
           agreementEndDate: "2029-08-31",
           agreementValue: 1575.0,
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: [],
           options: [],
         },
@@ -158,7 +159,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -185,7 +186,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: [],
           options: [],
         },
@@ -201,7 +202,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -224,7 +225,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -248,7 +249,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -272,7 +273,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -299,7 +300,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -344,7 +345,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           options: [],
         },
       });
@@ -360,7 +361,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: "SD8545-9935",
           options: [],
         },
@@ -377,7 +378,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: [123],
           options: [],
         },
@@ -396,7 +397,7 @@ describe("validateReportingEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -585,7 +586,7 @@ describe("validateReportingEvent", () => {
         ...validBase,
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: "200000001",
+          sbi: "800000001",
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimCode: "ANNUAL",
@@ -603,7 +604,7 @@ describe("validateReportingEvent", () => {
         ...validBase,
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: "200000001",
+          sbi: "800000001",
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimStatus: "SUBMITTED",
@@ -619,7 +620,7 @@ describe("validateReportingEvent", () => {
         ...validBase,
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: 200000001,
+          sbi: 800000001,
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimStatus: "SUBMITTED",
@@ -628,7 +629,7 @@ describe("validateReportingEvent", () => {
         },
       });
       expect(result.valid).toBe(true);
-      expect(result.value.eventData.sbi).toBe("200000001");
+      expect(result.value.eventData.sbi).toBe("800000001");
     });
 
     test("accepts a valid Claim submitted event with empty string claimPaymentRef", () => {
@@ -636,7 +637,7 @@ describe("validateReportingEvent", () => {
         ...validBase,
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: "200000001",
+          sbi: "800000001",
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimStatus: "SUBMITTED",
@@ -671,7 +672,7 @@ describe("validateReportingEvent", () => {
         ...validBase,
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: "200000001",
+          sbi: "800000001",
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimStatus: "SUBMITTED",
@@ -690,7 +691,7 @@ describe("validateReportingEvent", () => {
         ...validBase,
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: "200000001",
+          sbi: "800000001",
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimStatus: "SUBMITTED",
@@ -702,6 +703,286 @@ describe("validateReportingEvent", () => {
       expect(result.errors).toContain(
         '"eventData.claimValue" must be a number',
       );
+    });
+  });
+
+  describe("Application created events", () => {
+    test("accepts a valid Application created event", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {
+            businessDetailsUpToDate: true,
+            applicant: {
+              business: {
+                name: "Jane Doe Farms Ltd",
+              },
+              customer: {
+                name: "Jane Doe",
+              },
+            },
+            yourLegalStatus: "Private limited company",
+            companyNumber: "12351975",
+            organisationType: "Landowner farmer or grower",
+            sectorsIrrigated: ["Arable crops"],
+            whereWaterWillComeFrom: [
+              "A surface water source (for example a river or stream)",
+            ],
+            itemsPlanningToInstall: ["Reservoir"],
+            totalEstimatedCost: 150000,
+            estimatedMaxGrant: 75000,
+          },
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts a valid Application created event with numeric sbi and crn", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: 800000001,
+          crn: 123456789,
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {
+            itemsPlanningToInstall: ["Reservoir"],
+            totalEstimatedCost: 150000,
+          },
+        },
+      });
+      expect(result.valid).toBe(true);
+      expect(result.value.eventData.sbi).toBe("800000001");
+      expect(result.value.eventData.crn).toBe("123456789");
+    });
+
+    test("accepts a valid Application created event with empty applicationPayload", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {},
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("normalises the validated applicationReceiptDate (converts to Date object)", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {
+            itemsPlanningToInstall: ["Reservoir"],
+            totalEstimatedCost: 150000,
+          },
+        },
+      });
+      expect(result.valid).toBe(true);
+      expect(result.value.eventData.applicationReceiptDate).toBeInstanceOf(
+        Date,
+      );
+    });
+
+    test("rejects Application created event if required fields are missing", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          applicationId: "APP123456",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('"eventData.sbi" is required');
+      expect(result.errors).toContain('"eventData.crn" is required');
+      expect(result.errors).toContain(
+        '"eventData.applicationType" is required',
+      );
+      expect(result.errors).toContain(
+        '"eventData.applicationReceiptDate" is required',
+      );
+      expect(result.errors).toContain(
+        '"eventData.applicationPayload" is required',
+      );
+    });
+
+    test("accepts a valid Application created event without applicantName", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicationPayload: {
+            businessDetailsUpToDate: true,
+          },
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("rejects Application created event if applicationReceiptDate is not a valid date", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "invalid-date",
+          applicantName: "Jane Doe",
+          applicationPayload: {
+            itemsPlanningToInstall: ["Reservoir"],
+            totalEstimatedCost: 150000,
+          },
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.applicationReceiptDate" must be in ISO 8601 date format',
+      );
+    });
+
+    test("rejects Application created event if applicationPayload is not an object", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: "invalid-payload",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.applicationPayload" must be of type object',
+      );
+    });
+
+    test("rejects Application created event if applicationId is not a string", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: 123456,
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {},
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.applicationId" must be a string',
+      );
+    });
+
+    test("rejects Application created event if applicationType is not a string", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: 123456,
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {},
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.applicationType" must be a string',
+      );
+    });
+
+    test("rejects Application created event if applicantName is not a string", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: 123456,
+          applicationPayload: {},
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.applicantName" must be a string',
+      );
+    });
+
+    test("rejects Application created event if sbi exceeds max length", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "x".repeat(51),
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {},
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((e) => e.includes("sbi"))).toBe(true);
+    });
+
+    test("rejects Application created event if crn exceeds max length", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "x".repeat(51),
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {},
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors.some((e) => e.includes("crn"))).toBe(true);
     });
   });
 });
