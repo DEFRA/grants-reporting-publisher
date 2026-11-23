@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 1.1.0
+
+### Minor Changes
+
+- d545f31: Support application created event
+
 ## 1.0.1
 
 ### Patch Changes
