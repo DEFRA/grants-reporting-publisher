@@ -2,6 +2,7 @@ import { publishReportingEvent } from "./publish.js";
 import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
+  APPLICATION_CREATED,
   CLAIM_SUBMITTED,
 } from "./constants.js";
 
@@ -64,7 +65,7 @@ describe("publishAuditEvent", () => {
       await publishReportingEvent(eventWithoutVersion, baseConfig);
       const cmdArg = PublishCommand.mock.calls[0][0];
       const msg = JSON.parse(cmdArg.Message);
-      expect(msg.version).toBe("1.0.0");
+      expect(msg.version).toBe("1.1.0");
     });
 
     test("applies config version when not set in event", async () => {
@@ -179,7 +180,7 @@ describe("publishAuditEvent", () => {
           agreementId: "WMP123456789",
           agreementType: "WOODLAND",
           agreementStatus: "ACCEPTED",
-          sbi: "200000001",
+          sbi: "800000001",
           parcels: ["SD8545-9935"],
           options: [
             {
@@ -209,7 +210,7 @@ describe("publishAuditEvent", () => {
         service: "grants",
         eventData: {
           eventType: CLAIM_SUBMITTED,
-          sbi: "200000001",
+          sbi: "800000001",
           agreementId: "WMP123456789",
           claimId: "CLM123456",
           claimCode: "ANNUAL",
@@ -222,6 +223,53 @@ describe("publishAuditEvent", () => {
 
       const result = await publishReportingEvent(
         claimSubmittedEvent,
+        baseConfig,
+      );
+      expect(result).toEqual({ messageId: "msg-001" });
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    test("publishes APPLICATION_CREATED event", async () => {
+      const applicationCreatedEvent = {
+        correlationId: "abc-123",
+        datetime: "2025-12-01T12:51:41.381Z",
+        version: "1.0.0",
+        application: "FCP001",
+        service: "grants",
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2025-12-01T12:51:41.381Z",
+          applicantName: "Jane Doe",
+          applicationPayload: {
+            businessDetailsUpToDate: true,
+            applicant: {
+              business: {
+                name: "Jane Doe Farms Ltd",
+              },
+              customer: {
+                name: "Jane Doe",
+              },
+            },
+            yourLegalStatus: "Private limited company",
+            companyNumber: "12351975",
+            organisationType: "Landowner farmer or grower",
+            sectorsIrrigated: ["Arable crops"],
+            whereWaterWillComeFrom: [
+              "A surface water source (for example a river or stream)",
+            ],
+            itemsPlanningToInstall: ["Reservoir"],
+            totalEstimatedCost: 150000,
+            estimatedMaxGrant: 75000,
+          },
+        },
+      };
+
+      const result = await publishReportingEvent(
+        applicationCreatedEvent,
         baseConfig,
       );
       expect(result).toEqual({ messageId: "msg-001" });
