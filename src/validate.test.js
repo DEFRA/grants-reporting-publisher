@@ -823,10 +823,27 @@ describe("validateReportingEvent", () => {
       expect(result.errors).toContain(
         '"eventData.applicationReceiptDate" is required',
       );
-      expect(result.errors).toContain('"eventData.applicantName" is required');
       expect(result.errors).toContain(
         '"eventData.applicationPayload" is required',
       );
+    });
+
+    test("accepts a valid Application created event without applicantName", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2026-09-02T10:00:00Z",
+          applicationPayload: {
+            businessDetailsUpToDate: true,
+          },
+        },
+      });
+      expect(result.valid).toBe(true);
     });
 
     test("rejects Application created event if applicationReceiptDate is not a valid date", () => {

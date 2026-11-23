@@ -275,6 +275,34 @@ describe("publishAuditEvent", () => {
       expect(result).toEqual({ messageId: "msg-001" });
       expect(mockSend).toHaveBeenCalledTimes(1);
     });
+
+    test("publishes APPLICATION_CREATED event without applicantName", async () => {
+      const applicationCreatedEvent = {
+        correlationId: "abc-123",
+        datetime: "2025-12-01T12:51:41.381Z",
+        version: "1.0.0",
+        application: "FCP001",
+        service: "grants",
+        eventData: {
+          eventType: APPLICATION_CREATED,
+          sbi: "800000001",
+          crn: "123456789",
+          applicationId: "APP123456",
+          applicationType: "water-management",
+          applicationReceiptDate: "2025-12-01T12:51:41.381Z",
+          applicationPayload: {
+            businessDetailsUpToDate: true,
+          },
+        },
+      };
+
+      const result = await publishReportingEvent(
+        applicationCreatedEvent,
+        baseConfig,
+      );
+      expect(result).toEqual({ messageId: "msg-001" });
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe("event validation", () => {

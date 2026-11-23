@@ -69,7 +69,7 @@ const applicationCreatedEventSchema = Joi.object({
   applicationId: Joi.string().required(),
   applicationType: Joi.string().required(),
   applicationReceiptDate: Joi.date().iso().required(),
-  applicantName: Joi.string().required(),
+  applicantName: Joi.string().optional(),
   applicationPayload: Joi.object().required(),
 });
 

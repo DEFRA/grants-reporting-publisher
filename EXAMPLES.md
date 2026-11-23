@@ -142,7 +142,7 @@ const applicationCreatedEvent = {
     applicationId: "APP-123456",
     applicationType: "water-management",
     applicationReceiptDate: new Date().toISOString(),
-    applicantName: "Jane Doe",
+    applicantName: "Jane Doe", // optional
     applicationPayload: {
       businessDetailsUpToDate: true,
       applicant: {
