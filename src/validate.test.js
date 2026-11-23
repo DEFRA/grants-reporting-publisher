@@ -995,6 +995,7 @@ describe("validateReportingEvent", () => {
           eventType: APPLICATION_STATUS_CHANGED,
           applicationId: "APP123456",
           applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
           statusDate: "2026-09-02T10:00:00Z",
           userId: "user-123",
         },
@@ -1009,6 +1010,7 @@ describe("validateReportingEvent", () => {
           eventType: APPLICATION_STATUS_CHANGED,
           applicationId: "APP123456",
           applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
           statusDate: "2026-09-02T10:00:00Z",
         },
       });
@@ -1027,6 +1029,9 @@ describe("validateReportingEvent", () => {
       expect(result.errors).toContain(
         '"eventData.applicationStatus" is required',
       );
+      expect(result.errors).toContain(
+        '"eventData.applicationType" is required',
+      );
       expect(result.errors).toContain('"eventData.statusDate" is required');
     });
 
@@ -1037,6 +1042,7 @@ describe("validateReportingEvent", () => {
           eventType: APPLICATION_STATUS_CHANGED,
           applicationId: "APP123456",
           applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
           statusDate: "invalid-date",
         },
       });

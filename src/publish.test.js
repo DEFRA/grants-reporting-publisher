@@ -316,6 +316,7 @@ describe("publishAuditEvent", () => {
           eventType: APPLICATION_STATUS_CHANGED,
           applicationId: "APP123456",
           applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
           statusDate: "2025-12-01T12:51:41.381Z",
           userId: "user-123",
         },

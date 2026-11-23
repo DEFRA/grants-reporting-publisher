@@ -56,6 +56,7 @@ const agreementStatusChangedEventSchema = Joi.object({
 const applicationStatusChangedEventSchema = Joi.object({
   applicationId: Joi.string().required(),
   applicationStatus: Joi.string().required(),
+  applicationType: Joi.string().required(),
   statusDate: Joi.date().iso().required(),
   userId: Joi.string().optional(),
 });

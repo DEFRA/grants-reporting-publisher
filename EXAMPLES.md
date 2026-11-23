@@ -189,6 +189,7 @@ const applicationStatusChangedEvent = {
     eventType: APPLICATION_STATUS_CHANGED,
     applicationId: "APP-123456",
     applicationStatus: "SUBMITTED",
+    applicationType: "water-management",
     statusDate: new Date().toISOString(),
     userId: "user-uuid-123", // optional
   },
