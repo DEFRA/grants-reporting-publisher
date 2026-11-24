@@ -1,5 +1,11 @@
 # @defra/grants-reporting-publisher
 
+## 1.2.0
+
+### Minor Changes
+
+- aab0024: Add support for application status change
+
 ## 1.1.0
 
 ### Minor Changes
