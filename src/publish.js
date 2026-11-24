@@ -3,7 +3,7 @@ import { PublishCommand } from "@aws-sdk/client-sns";
 import { validateReportingEvent } from "./validate.js";
 import { configSchema } from "./schema.js";
 
-const DEFAULT_VERSION = "1.1.0";
+const DEFAULT_VERSION = "1.2.0";
 const DEFAULT_SERVICE = "grants";
 
 function applyDefaults(event, config) {

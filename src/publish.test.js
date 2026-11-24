@@ -3,6 +3,7 @@ import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
   APPLICATION_CREATED,
+  APPLICATION_STATUS_CHANGED,
   CLAIM_SUBMITTED,
 } from "./constants.js";
 
@@ -65,7 +66,7 @@ describe("publishAuditEvent", () => {
       await publishReportingEvent(eventWithoutVersion, baseConfig);
       const cmdArg = PublishCommand.mock.calls[0][0];
       const msg = JSON.parse(cmdArg.Message);
-      expect(msg.version).toBe("1.1.0");
+      expect(msg.version).toBe("1.2.0");
     });
 
     test("applies config version when not set in event", async () => {
@@ -298,6 +299,31 @@ describe("publishAuditEvent", () => {
 
       const result = await publishReportingEvent(
         applicationCreatedEvent,
+        baseConfig,
+      );
+      expect(result).toEqual({ messageId: "msg-001" });
+      expect(mockSend).toHaveBeenCalledTimes(1);
+    });
+
+    test("publishes APPLICATION_STATUS_CHANGED event", async () => {
+      const applicationStatusChangedEvent = {
+        correlationId: "abc-123",
+        datetime: "2025-12-01T12:51:41.381Z",
+        version: "1.0.0",
+        application: "FCP001",
+        service: "grants",
+        eventData: {
+          eventType: APPLICATION_STATUS_CHANGED,
+          applicationId: "APP123456",
+          applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
+          statusDate: "2025-12-01T12:51:41.381Z",
+          userId: "user-123",
+        },
+      };
+
+      const result = await publishReportingEvent(
+        applicationStatusChangedEvent,
         baseConfig,
       );
       expect(result).toEqual({ messageId: "msg-001" });

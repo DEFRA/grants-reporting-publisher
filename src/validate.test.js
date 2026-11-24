@@ -3,6 +3,7 @@ import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
   APPLICATION_CREATED,
+  APPLICATION_STATUS_CHANGED,
   CLAIM_SUBMITTED,
 } from "./constants.js";
 
@@ -120,7 +121,7 @@ describe("validateReportingEvent", () => {
       });
       expect(result.valid).toBe(false);
       expect(result.errors).toContain(
-        '"eventData.eventType" must be one of [AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED, APPLICATION_CREATED]',
+        '"eventData.eventType" must be one of [AGREEMENT_CREATED, AGREEMENT_STATUS_CHANGED, CLAIM_SUBMITTED, APPLICATION_CREATED, APPLICATION_STATUS_CHANGED]',
       );
     });
 
@@ -983,6 +984,72 @@ describe("validateReportingEvent", () => {
       });
       expect(result.valid).toBe(false);
       expect(result.errors.some((e) => e.includes("crn"))).toBe(true);
+    });
+  });
+
+  describe("Application status changed events", () => {
+    test("accepts a valid Application status changed event", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_STATUS_CHANGED,
+          applicationId: "APP123456",
+          applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
+          statusDate: "2026-09-02T10:00:00Z",
+          userId: "user-123",
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("accepts Application status changed event without optional userId", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_STATUS_CHANGED,
+          applicationId: "APP123456",
+          applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
+          statusDate: "2026-09-02T10:00:00Z",
+        },
+      });
+      expect(result.valid).toBe(true);
+    });
+
+    test("rejects Application status changed event if required fields are missing", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_STATUS_CHANGED,
+          applicationId: "APP123456",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.applicationStatus" is required',
+      );
+      expect(result.errors).toContain(
+        '"eventData.applicationType" is required',
+      );
+      expect(result.errors).toContain('"eventData.statusDate" is required');
+    });
+
+    test("rejects Application status changed event if statusDate is invalid", () => {
+      const result = validateReportingEvent({
+        ...validBase,
+        eventData: {
+          eventType: APPLICATION_STATUS_CHANGED,
+          applicationId: "APP123456",
+          applicationStatus: "SUBMITTED",
+          applicationType: "water-management",
+          statusDate: "invalid-date",
+        },
+      });
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain(
+        '"eventData.statusDate" must be in ISO 8601 date format',
+      );
     });
   });
 });

@@ -14,6 +14,7 @@ import {
   AGREEMENT_STATUS_CHANGED,
   CLAIM_SUBMITTED,
   APPLICATION_CREATED,
+  APPLICATION_STATUS_CHANGED,
 } from "@defra/grants-reporting-publisher";
 
 const snsClient = new SNSClient({ region: "eu-west-2" });
@@ -170,6 +171,33 @@ const applicationCreatedEvent = {
 try {
   const { messageId } = await publishReportingEvent(
     applicationCreatedEvent,
+    config,
+  );
+  console.log(`Event published with Message ID: ${messageId}`);
+} catch (error) {
+  console.error("Failed to publish event:", error.message);
+}
+```
+
+### Application Status Changed (`APPLICATION_STATUS_CHANGED`)
+
+Use this event type when the status of an existing application changes.
+
+```javascript
+const applicationStatusChangedEvent = {
+  eventData: {
+    eventType: APPLICATION_STATUS_CHANGED,
+    applicationId: "APP-123456",
+    applicationStatus: "SUBMITTED",
+    applicationType: "water-management",
+    statusDate: new Date().toISOString(),
+    userId: "user-uuid-123", // optional
+  },
+};
+
+try {
+  const { messageId } = await publishReportingEvent(
+    applicationStatusChangedEvent,
     config,
   );
   console.log(`Event published with Message ID: ${messageId}`);

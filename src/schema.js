@@ -3,6 +3,7 @@ import {
   AGREEMENT_CREATED,
   AGREEMENT_STATUS_CHANGED,
   APPLICATION_CREATED,
+  APPLICATION_STATUS_CHANGED,
   CLAIM_SUBMITTED,
 } from "./constants.js";
 
@@ -52,6 +53,14 @@ const agreementStatusChangedEventSchema = Joi.object({
   options: optionsSchema.optional(),
 });
 
+const applicationStatusChangedEventSchema = Joi.object({
+  applicationId: Joi.string().required(),
+  applicationStatus: Joi.string().required(),
+  applicationType: Joi.string().required(),
+  statusDate: Joi.date().iso().required(),
+  userId: Joi.string().optional(),
+});
+
 const claimSubmittedEventSchema = Joi.object({
   sbi: accountId.required(),
   agreementId: Joi.string().required(),
@@ -86,6 +95,7 @@ export const eventSchema = Joi.object({
         AGREEMENT_STATUS_CHANGED,
         CLAIM_SUBMITTED,
         APPLICATION_CREATED,
+        APPLICATION_STATUS_CHANGED,
       )
       .required(),
   })
@@ -100,6 +110,9 @@ export const eventSchema = Joi.object({
     })
     .when(Joi.object({ eventType: APPLICATION_CREATED }).unknown(), {
       then: applicationCreatedEventSchema,
+    })
+    .when(Joi.object({ eventType: APPLICATION_STATUS_CHANGED }).unknown(), {
+      then: applicationStatusChangedEventSchema,
     })
     .unknown()
     .required(),
